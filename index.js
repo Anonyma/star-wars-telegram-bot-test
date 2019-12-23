@@ -3,7 +3,7 @@ const axios = require('axios')
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_TOKEN
-const bot = new TelegramBot(token, { polling: true })
+const bot = new TelegramBot(token, { polling: true, webHook: {port: process.env.PORT} })
 
 
 bot.on(/\/start/, ({ chat: { id: chatId }, msg }) => {
@@ -87,13 +87,11 @@ bot.on('message', async ({ chat: { id: chatId }, text: msgText }) => {
 				planet = await axios
 					.get(homeworld).then(res => res.data)
 					.catch(e => console.log(e))
-				console.log(planet);
 
 				const someCharData = `${name} (species: ${mainSpecies['name']}) is ${height}cm tall and was born in ${planet['name']} (year ${birth_year})`
 				bot.sendMessage(chatId, someCharData)
 			}
 			else {
-				console.log('data res'), res;
 				bot.sendMessage(
 					chatId,
 					`Got nothing for that.. character? Sorry!`,
