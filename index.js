@@ -3,8 +3,8 @@ const axios = require('axios')
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_TOKEN
-const bot = new TelegramBot(token, { polling: true, webHook: {port: process.env.PORT} })
-
+const bot = new TelegramBot(token, { webHook: {port: process.env.PORT, host: process.env.HOST} })
+bot.setWebHook(process.env.BASE_URL + ':443' + token);
 
 bot.on(/\/start/, ({ chat: { id: chatId }, msg }) => {
 	bot.sendMessage(
@@ -106,7 +106,9 @@ bot.on('message', async ({ chat: { id: chatId }, text: msgText }) => {
 			)
 		}
 	}
-	else {
+	else if (!msgText
+		.toString()
+		.includes('/')) {
 		bot.sendMessage(
 			chatId,
 			`Uuh... If you want to know more about a certain Star Wars character, you should type sw:nameOfTheCharacter`,
